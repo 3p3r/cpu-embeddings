@@ -1,6 +1,12 @@
-const path = require("path");
+import * as path from "path";
+import { Configuration as WebpackConfiguration } from "webpack";
+import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
-const config = {
+interface Configuration extends WebpackConfiguration {
+  devServer?: WebpackDevServerConfiguration;
+}
+
+const config: Configuration = {
   entry: "./src/index.ts",
   module: {
     rules: [
@@ -30,4 +36,4 @@ const config = {
   devtool: "source-map"
 };
 
-module.exports = config;
+export default config;
