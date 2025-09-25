@@ -1,84 +1,48 @@
-import { CPUEmbeddings } from "./index";
+import { describe, test, expect } from "vitest";
+import { embeddings } from "./index";
 
-describe("CPUEmbeddings", () => {
-  let embeddings: CPUEmbeddings;
-
-  beforeEach(() => {
-    embeddings = new CPUEmbeddings();
-  });
-
-  describe("initialization", () => {
-    it("should create an instance", () => {
-      expect(embeddings).toBeDefined();
-      expect(embeddings).toBeInstanceOf(CPUEmbeddings);
-    });
-
-    it("should start uninitialized", () => {
-      expect(embeddings.isInitialized()).toBe(false);
-    });
-
-    it("should initialize correctly", () => {
-      embeddings.initialize();
-      expect(embeddings.isInitialized()).toBe(true);
-    });
-  });
-
-  describe("embedding generation", () => {
-    beforeEach(() => {
-      embeddings.initialize();
-    });
-
-    it("should generate embeddings for text input", () => {
-      const text = "Hello, World!";
-      const embedding = embeddings.generateEmbedding(text);
-
-      expect(embedding).toBeDefined();
-      expect(Array.isArray(embedding)).toBe(true);
-      expect(embedding.length).toBe(128);
-    });
-
-    it("should generate different embeddings for different text", () => {
-      const text1 = "Hello";
-      const text2 = "World";
-
-      const embedding1 = embeddings.generateEmbedding(text1);
-      const embedding2 = embeddings.generateEmbedding(text2);
-
-      expect(embedding1).not.toEqual(embedding2);
-    });
-
-    it("should generate consistent embeddings for same text", () => {
-      const text = "Consistent test";
-
-      const embedding1 = embeddings.generateEmbedding(text);
-      const embedding2 = embeddings.generateEmbedding(text);
-
-      expect(embedding1).toEqual(embedding2);
-    });
-
-    it("should throw error when not initialized", () => {
-      const uninitializedEmbeddings = new CPUEmbeddings();
-
-      expect(() => {
-        uninitializedEmbeddings.generateEmbedding("test");
-      }).toThrow("System not initialized. Call initialize() first.");
-    });
-  });
-
+describe("embeddings", () => {
   describe("sanity checks", () => {
-    it("should pass basic sanity test", () => {
+    test("should pass basic sanity test", () => {
       expect(true).toBe(true);
       expect(1 + 1).toBe(2);
       expect("hello").toBe("hello");
     });
+  });
 
-    it("should have proper types", () => {
-      embeddings.initialize();
-      const embedding = embeddings.generateEmbedding("test");
+  describe("functionality", () => {
+    test("should return a 768 element array for 2 input sentences", async () => {
+      const result = await embeddings(["Hello, world!", "How are you?"]);
+      expect(result.length).toBe(768);
+    });
 
-      expect(typeof embeddings.isInitialized()).toBe("boolean");
-      expect(typeof embedding).toBe("object");
-      expect(embedding.every(val => typeof val === "number")).toBe(true);
+    test("should return a 1x384 matrix for a single input sentence", async () => {
+      const result = await embeddings("Hello, world!");
+      expect(result.length).toBe(384);
+    });
+
+    test("should return different embeddings for different sentences", async () => {
+      const result1 = await embeddings("Hello, world!");
+      const result2 = await embeddings("How are you?");
+      expect(result1).not.toEqual(result2);
+    });
+
+    test("should return similar embeddings for similar sentences", async () => {
+      const result1 = await embeddings("Hello, world!");
+      const result2 = await embeddings("Hello, everyone!");
+      // Compute cosine similarity
+      const dotProduct = result1.reduce(
+        (sum, val, i) => sum + val * result2[i],
+        0,
+      );
+      const magnitude1 = Math.sqrt(
+        result1.reduce((sum, val) => sum + val * val, 0),
+      );
+      const magnitude2 = Math.sqrt(
+        result2.reduce((sum, val) => sum + val * val, 0),
+      );
+      const cosineSimilarity = dotProduct / (magnitude1 * magnitude2);
+      expect(cosineSimilarity).toBeGreaterThan(0.5); // Similar sentences should have high cosine similarity
     });
   });
 });

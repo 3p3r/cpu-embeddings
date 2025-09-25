@@ -1,0 +1,13 @@
+diff --git a/node_modules/@xenova/transformers/src/utils/image.js b/node_modules/@xenova/transformers/src/utils/image.js
+index 89bb248..1bccca4 100644
+--- a/node_modules/@xenova/transformers/src/utils/image.js
++++ b/node_modules/@xenova/transformers/src/utils/image.js
+@@ -13,7 +13,7 @@ import { env } from '../env.js';
+ import { Tensor } from './tensor.js';
+ 
+ // Will be empty (or not used) if running in browser or web-worker
+-import sharp from 'sharp';
++const sharp = {} // unused;
+ 
+ const BROWSER_ENV = typeof self !== 'undefined';
+ const WEBWORKER_ENV = BROWSER_ENV && self.constructor.name === 'DedicatedWorkerGlobalScope';
