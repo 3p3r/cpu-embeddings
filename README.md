@@ -15,85 +15,28 @@ Embeddings generated on CPU for lightweight classification tasks using the Xenov
 npm install cpu-embeddings
 ```
 
-## Usage
+## API Reference
 
-### Basic Example
+### `EmbeddingsOptions`
 
-```typescript
-import { embeddings } from 'cpu-embeddings';
+Interface for embedding options.
 
-const text = "Hello, world!";
-const embedding = await embeddings(text);
-console.log(embedding); // Array of 384 numbers
-```
+- `modelName?: string` - Model name (default: "Xenova/all-MiniLM-L6-v2")
+- `modelPath?: string` - Local model path (default: "models")
+- `numThreads?: number` - Number of threads for ONNX (default: 1)
 
-### Batch Processing
+### `embeddings(text: string | string[], opts?: EmbeddingsOptions): Promise<number[]>`
 
-```typescript
-import { embeddings } from 'cpu-embeddings';
+Generates embeddings for the given text(s).
 
-const texts = ["Hello, world!", "How are you?", "Goodbye!"];
-const embeddingsArray = await embeddings(texts);
-console.log(embeddingsArray); // Flattened array of 384 * 3 = 1152 numbers
-```
-
-### Classification Example
-
-```typescript
-import { embeddings } from 'cpu-embeddings';
-
-// Sample training data
-const trainingTexts = [
-  "I love this product",
-  "This is amazing",
-  "Great quality",
-  "Terrible experience",
-  "Worst purchase ever",
-  "Awful service"
-];
-const trainingLabels = [1, 1, 1, 0, 0, 0]; // 1 = positive, 0 = negative
-
-// Get embeddings for training data
-const trainingEmbeddings = await embeddings(trainingTexts);
-
-// Simple cosine similarity classifier
-function classify(text: string): number {
-  const testEmbedding = await embeddings(text);
-  let bestSimilarity = -1;
-  let bestLabel = 0;
-  
-  for (let i = 0; i < trainingEmbeddings.length / 384; i++) {
-    const trainEmbedding = trainingEmbeddings.slice(i * 384, (i + 1) * 384);
-    const similarity = cosineSimilarity(testEmbedding, trainEmbedding);
-    if (similarity > bestSimilarity) {
-      bestSimilarity = similarity;
-      bestLabel = trainingLabels[i];
-    }
-  }
-  
-  return bestLabel;
-}
-
-function cosineSimilarity(a: number[], b: number[]): number {
-  const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
-  const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
-  const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
-  return dotProduct / (magnitudeA * magnitudeB);
-}
-
-// Usage
-const result = await classify("This is fantastic!");
-console.log(result); // 1 (positive)
-```
+- **Parameters**:
+  - `text`: A single string or an array of strings to embed
+  - `opts`: Optional embedding options
+- **Returns**: A promise that resolves to an array of numbers representing the embeddings. For a single string, returns 384 numbers. For an array of n strings, returns 384 * n numbers.
 
 ## Implementation Details
 
-This library uses the [Xenova Transformers](https://huggingface.co/docs/transformers.js/index) JavaScript library, which allows running transformer models directly in the browser or Node.js without Python dependencies. The implementation:
-
-- Runs on CPU using ONNX Runtime WebAssembly backend
-- Uses a quantized version of the `all-MiniLM-L6-v2` model for efficiency
-- Applies mean pooling and L2 normalization to generate sentence embeddings
-- Bundles the model files directly in the package for offline usage
+Uses the [Xenova Transformers](https://huggingface.co/docs/transformers.js/index) library to run transformer models in Node.js without Python. Runs on CPU with ONNX Runtime WebAssembly, using a quantized `all-MiniLM-L6-v2` model with mean pooling and L2 normalization. Model files are bundled for offline use.
 
 ## Useful Commands
 
@@ -128,16 +71,6 @@ npm run release:minor
 # Major release
 npm run release:major
 ```
-
-## API Reference
-
-### `embeddings(text: string | string[]): Promise<number[]>`
-
-Generates embeddings for the given text(s).
-
-- **Parameters**:
-  - `text`: A single string or an array of strings to embed
-- **Returns**: A promise that resolves to an array of numbers representing the embeddings. For a single string, returns 384 numbers. For an array of n strings, returns 384 * n numbers.
 
 ## License
 
