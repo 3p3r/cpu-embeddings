@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/3p3r/cpu-embeddings/compare/v1.1.0...v1.2.0) (2025-09-26)
+
+
+### Features
+
+* options interface for better handling of models location ([1141bb9](https://github.com/3p3r/cpu-embeddings/commit/1141bb949e2510f0847093c2737242d8d4c7b0e5))
+
 ## 1.1.0 (2025-09-25)
 
 
