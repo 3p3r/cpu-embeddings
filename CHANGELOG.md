@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/3p3r/cpu-embeddings/compare/v1.2.2...v1.2.3) (2025-09-27)
+
+
+### Bug Fixes
+
+* bundling transformers, excluding runtime, trying package json route ([29a3967](https://github.com/3p3r/cpu-embeddings/commit/29a3967891ba7e7f37543d641967f6830c851e29))
+
 ### [1.2.2](https://github.com/3p3r/cpu-embeddings/compare/v1.2.1...v1.2.2) (2025-09-27)
 
 
