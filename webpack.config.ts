@@ -2,6 +2,8 @@ import * as path from "path";
 import type { Configuration as WebpackConfiguration } from "webpack";
 import type { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
+const DeclarationBundlerPlugin = require('types-webpack-bundler');
+
 interface Configuration extends WebpackConfiguration {
   devServer?: WebpackDevServerConfiguration;
 }
@@ -14,7 +16,7 @@ const config: Configuration = {
       {
         test: /\.tsx?$/,
         use: "ts-loader",
-        exclude: /node_modules/
+        exclude: /node_modules/,
       }
     ]
   },
@@ -27,6 +29,7 @@ const config: Configuration = {
     clean: true,
     libraryTarget: "umd",
     umdNamedDefine: true,
+    uniqueName: "cpu-embeddings",
     // normalizes support across workers, node and browser environments
     globalObject: "(typeof self !== 'undefined' ? self : globalThis)",
   },
@@ -46,9 +49,14 @@ const config: Configuration = {
     node: true
   },
   externals: {
-    "onnxruntime-node": "onnxruntime-node",
-    "onnxruntime-web": "onnxruntime-web"
-  }
+    "@xenova/transformers": "@xenova/transformers",
+  },
+  plugins: [
+    new DeclarationBundlerPlugin({
+      moduleName: '"cpu-embeddings"',
+      out: '../dist/bundle.d.ts',
+    })
+  ]
 };
 
 export default config;
