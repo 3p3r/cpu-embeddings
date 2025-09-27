@@ -7,6 +7,7 @@ interface Configuration extends WebpackConfiguration {
 }
 
 const config: Configuration = {
+  target: "node",
   entry: "./src/index.ts",
   module: {
     rules: [
@@ -23,7 +24,11 @@ const config: Configuration = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    clean: true
+    clean: true,
+    libraryTarget: "umd",
+    umdNamedDefine: true,
+    // normalizes support across workers, node and browser environments
+    globalObject: "(typeof self !== 'undefined' ? self : globalThis)",
   },
   devServer: {
     static: {
@@ -36,6 +41,13 @@ const config: Configuration = {
   devtool: "source-map",
   performance: {
     hints: false
+  },
+  externalsPresets: {
+    node: true
+  },
+  externals: {
+    "onnxruntime-node": "onnxruntime-node",
+    "onnxruntime-web": "onnxruntime-web"
   }
 };
 
