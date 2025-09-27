@@ -1,6 +1,6 @@
 {
   "name": "cpu-embeddings",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "embeddings generated on CPU for lightweight classification tasks",
   "main": "dist/src/bundle.js",
   "types": "dist/src/bundle.d.ts",

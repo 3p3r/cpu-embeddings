@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/3p3r/cpu-embeddings/compare/v1.2.0...v1.2.1) (2025-09-27)
+
+
+### Bug Fixes
+
+* runtime errors and bad module path in release bundle ([98e272d](https://github.com/3p3r/cpu-embeddings/commit/98e272d19de778187a1a05d33fcd13618bb9dbec))
+
 ## [1.2.0](https://github.com/3p3r/cpu-embeddings/compare/v1.1.0...v1.2.0) (2025-09-26)
 
 
