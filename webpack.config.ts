@@ -49,7 +49,8 @@ const config: Configuration = {
     node: true
   },
   externals: {
-    "@xenova/transformers": "@xenova/transformers",
+    "onnxruntime-node": "onnxruntime-node",
+    "onnxruntime-web": "onnxruntime-web"
   },
   plugins: [
     new DeclarationBundlerPlugin({
